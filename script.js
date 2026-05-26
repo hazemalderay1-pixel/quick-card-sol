@@ -44,15 +44,36 @@ document.addEventListener("DOMContentLoaded", () => {
     let names = [""];
     let activeNameIndex = 0;
 
+    // الإعدادات الافتراضية لكل نموذج
+    const templateSettings = {
+        template1: {
+            fontFamily: "IBM Plex Sans Arabic",
+            fontSize: 45,
+            xPercent: 50,
+            yPercent: 51,
+            color: "#FFFFFF",
+            fontWeight: "500"
+        },
+        template2: {
+            fontFamily: "IBM Plex Sans Arabic",
+            fontSize: 40,
+            xPercent: 50,
+            yPercent: 52,
+            color: "#454DF9",
+            fontWeight: "500"
+        }
+    };
+
     // الإعدادات البصرية الموحدة لكل البطاقات
     const nameStyle = {
-        fontFamily: "IBM Plex Sans Arabic",
-        fontSize: 45,
-        xPercent: 50,
-        yPercent: 76,
-        color: "#D4AF37",
+        fontFamily: templateSettings.template1.fontFamily,
+        fontSize: templateSettings.template1.fontSize,
+        xPercent: templateSettings.template1.xPercent,
+        yPercent: templateSettings.template1.yPercent,
+        color: templateSettings.template1.color,
+        fontWeight: templateSettings.template1.fontWeight,
         width: 0,
-        height: 45
+        height: templateSettings.template1.fontSize
     };
 
     // --- تحميل قوالب البطاقات المربعة ---
@@ -65,6 +86,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     images.template1.onload = () => { if (currentTemplate === "template1") drawCard(); };
     images.template2.onload = () => { if (currentTemplate === "template2") drawCard(); };
+
+    function applyTemplateSettings(templateId) {
+        const settings = templateSettings[templateId];
+        if (!settings) return;
+        
+        nameStyle.fontFamily = settings.fontFamily;
+        nameStyle.fontSize = settings.fontSize;
+        nameStyle.xPercent = settings.xPercent;
+        nameStyle.yPercent = settings.yPercent;
+        nameStyle.color = settings.color;
+        nameStyle.fontWeight = settings.fontWeight;
+        
+        // مزامنة عناصر التحكم بالواجهة مع الإعدادات الجديدة
+        syncControlsWithStyle();
+    }
 
     // التأكد من تحميل الخطوط قبل عملية الرسم المبدئية
     document.fonts.ready.then(() => {
@@ -264,7 +300,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ضبط إعدادات الخط
         let activeFontSize = nameStyle.fontSize;
-        ctx.font = `bold ${activeFontSize}px "${nameStyle.fontFamily}", Cairo, sans-serif`;
+        const weight = nameStyle.fontWeight || "500";
+        ctx.font = `${weight} ${activeFontSize}px "${nameStyle.fontFamily}", Cairo, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
@@ -274,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         while (measuredWidth > maxWidth && activeFontSize > 10) {
             activeFontSize -= 2;
-            ctx.font = `bold ${activeFontSize}px "${nameStyle.fontFamily}", Cairo, sans-serif`;
+            ctx.font = `${weight} ${activeFontSize}px "${nameStyle.fontFamily}", Cairo, sans-serif`;
             measuredWidth = ctx.measureText(displayText).width;
         }
 
@@ -307,6 +344,10 @@ document.addEventListener("DOMContentLoaded", () => {
             templateOptions.forEach(opt => opt.classList.remove("active"));
             option.classList.add("active");
             currentTemplate = option.getAttribute("data-template");
+            
+            // تطبيق إعدادات هذا القالب الافتراضية
+            applyTemplateSettings(currentTemplate);
+            
             drawCard();
         });
     });
