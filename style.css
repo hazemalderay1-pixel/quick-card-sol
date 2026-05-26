@@ -914,7 +914,7 @@ body.dark-mode .btn-delete-name:hover {
 }
 
 .nav-logo {
-    height: 44px; /* تم زيادة حجم الشعار بنسبة 15% إضافية من 38px */
+    height: 18px; /* تم تصغير الشعار ليكون بارتفاع 18px */
     width: auto;
     display: block;
 }
@@ -957,7 +957,7 @@ body.dark-mode .nav-logo {
         margin-bottom: 1rem;
     }
     .nav-logo {
-        height: 35px; /* تم زيادة حجم الشعار بنسبة 15% إضافية في الموبايل من 30px */
+        height: 15px; /* تم تصغير الشعار ليكون بارتفاع 15px في الموبايل */
     }
     .nav-btn {
         width: 45px; /* كبرنا الزر بنسبة 25% في الموبايل */
